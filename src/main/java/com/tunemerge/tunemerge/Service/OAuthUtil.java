@@ -5,21 +5,21 @@
     */
     package com.tunemerge.tunemerge.Service;
 
-    import java.net.URLEncoder;
-    import java.nio.charset.StandardCharsets;
 
     import com.tunemerge.tunemerge.Entity.AccessToken;
-    import lombok.Data;
-    import org.springframework.http.HttpEntity;
+import com.tunemerge.tunemerge.Repository.AccesstokenRepositry;
+
+import lombok.Data;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
     import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
     import org.springframework.http.ResponseEntity;
     import org.springframework.stereotype.Service;
     import org.springframework.util.LinkedMultiValueMap;
     import org.springframework.util.MultiValueMap;
     import org.springframework.web.client.RestTemplate;
-import java.net.URLEncoder;
 
 /**
      * Utility class for handling OAuth authentication with Spotify.
@@ -29,8 +29,11 @@ import java.net.URLEncoder;
     public  class OAuthUtil {
         private static final String CLIENT_ID = "cf215981c8e548e2b2a70b1e3e244001";
         private static final String CLIENT_SECRET= "559466c34a6343beb827e9d94e7bedc5";
-        private static final String REDIRECT_URI = "http://localhost:8080/tune_merge";
+        private static final String REDIRECT_URI = "http://localhost:8080/login/callback";
         
+        @Autowired
+        AccesstokenRepositry AccesstokenRepo;
+
         /**
          * Generates the authorization URL for Spotify OAuth authentication.
          */
@@ -45,14 +48,10 @@ import java.net.URLEncoder;
     
             return authURL;
         }
-        /**
-         * Retrieves the access token from Spotify using the provided authorization code.
-         *
-         * @param code the authorization code for authenticating the request
-         * @return the access token
-         */
+       
 
-        public static AccessToken getAccessToken(String code) {
+        //this method will fetch the access token and store it in the database
+        public AccessToken getAccessToken(String code) {
             String tokenURL = "https://accounts.spotify.com/api/token";
             
             HttpHeaders headers = new HttpHeaders();
@@ -70,7 +69,9 @@ import java.net.URLEncoder;
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<AccessToken> response = restTemplate.postForEntity(tokenURL, request, AccessToken.class);
 
+            AccessToken token= response.getBody();
+            AccesstokenRepo.save(token);
 
-            return response.getBody().getAccess_token();          
+            return token;
         }
     }

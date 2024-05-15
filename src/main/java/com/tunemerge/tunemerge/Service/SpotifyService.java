@@ -4,7 +4,7 @@ package com.tunemerge.tunemerge.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
+
 import org.springframework.web.client.RestTemplate;
 /**
  * This class represents a service for interacting with the Spotify API.
