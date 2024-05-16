@@ -1,24 +1,23 @@
 package com.tunemerge.tunemerge.Controller;
 
 
-import java.io.IOException;
-
-import org.apache.catalina.authenticator.SpnegoAuthenticator.AcceptAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.tunemerge.tunemerge.Entity.AccessToken;
+import com.tunemerge.tunemerge.Model.AccessToken;
 import com.tunemerge.tunemerge.Repository.AccesstokenRepositry;
 import com.tunemerge.tunemerge.Service.OAuthUtil;
+import com.tunemerge.tunemerge.Service.SpotifyService;
+
 
 
 
@@ -26,6 +25,11 @@ import com.tunemerge.tunemerge.Service.OAuthUtil;
 @Controller
 public class LoginController {
 
+
+    
+    @Autowired
+    SpotifyService spotifyService;
+    
     @Autowired
     OAuthUtil oauthUtil;
     @Autowired
@@ -62,6 +66,16 @@ public class LoginController {
         return oauthUtil.getAccessToken(code);
     }
     
+    @GetMapping("/me")
+    public String userProfile(){
+       return spotifyService.getUserProfile(accesstokenRepositry.findById(1L).toString());
+    }
+
+   
+
+  
+}
+
 
   
     
@@ -69,4 +83,3 @@ public class LoginController {
     
 
     
-}

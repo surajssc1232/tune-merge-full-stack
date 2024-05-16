@@ -6,7 +6,7 @@
     package com.tunemerge.tunemerge.Service;
 
 
-    import com.tunemerge.tunemerge.Entity.AccessToken;
+    import com.tunemerge.tunemerge.Model.AccessToken;
 import com.tunemerge.tunemerge.Repository.AccesstokenRepositry;
 
 import lombok.Data;
@@ -70,6 +70,7 @@ import org.springframework.http.MediaType;
             ResponseEntity<AccessToken> response = restTemplate.postForEntity(tokenURL, request, AccessToken.class);
 
             AccessToken token= response.getBody();
+            AccesstokenRepo.deleteAll();
             AccesstokenRepo.save(token);
 
             return token;
